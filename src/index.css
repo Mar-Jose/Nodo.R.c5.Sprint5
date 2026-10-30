@@ -22,3 +22,26 @@ main {
   width: min(100% - 2rem, 48rem);
   margin: 4rem auto;
 }
+
+button {
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: 0.4rem;
+  color: #fff;
+  background: #2457a7;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.mensaje {
+  margin-top: 1.25rem;
+}
+
+.mensaje-error {
+  color: #b42318;
+}
