@@ -18,9 +18,23 @@ body {
   margin: 0;
 }
 
-main {
+.app-content {
   width: min(100% - 2rem, 48rem);
-  margin: 4rem auto;
+  margin: 4rem auto 3rem;
+}
+
+.backend-section {
+  width: min(100% - 2rem, 90rem);
+  margin: 0 auto 3rem;
+}
+
+.backend-frame {
+  display: block;
+  width: 100%;
+  min-height: 50rem;
+  border: 1px solid #d0d5dd;
+  border-radius: 0.5rem;
+  background: #fff;
 }
 
 button {
@@ -33,9 +47,30 @@ button {
   cursor: pointer;
 }
 
+.sync-button {
+  transition: all 0.3s ease;
+}
+
+.sync-button:hover:not(:disabled),
+.sync-button:focus-visible {
+  color: #fff;
+  background: #0b3d0b;
+  transform: scale(1.05);
+}
+
 button:disabled {
   cursor: wait;
   opacity: 0.7;
+}
+
+.sync-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sync-controls p {
+  margin: 0;
 }
 
 .mensaje {
@@ -44,4 +79,12 @@ button:disabled {
 
 .mensaje-error {
   color: #b42318;
+}
+
+@media (max-width: 480px) {
+  .sync-controls {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }

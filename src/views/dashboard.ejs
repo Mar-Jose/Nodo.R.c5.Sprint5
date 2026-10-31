@@ -24,35 +24,75 @@
                     margin-bottom: 20px;
                     background-color: white;
                 }
-                .paisP-actions a, .paisP-actions button {
+                .country-heading {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .country-flag {
+                    width: 64px;
+                    height: 42px;
+                    object-fit: contain;
+                }
+                .card-action {
+                    display: inline-block;
                     padding: 8px 12px;
                     margin-right: 5px;
                     cursor: pointer;
+                    border: 4px double;
+                    border-radius: 7px;
+                    font: inherit;
+                    font-weight: bold;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                }
+                .edit-button {
+                    background-color: #007bff;
+                    border-color: #003366;
+                    color: #fff;
+                }
+                .edit-button:hover,
+                .edit-button:focus-visible {
+                    background-color: #003366;
+                    color: #000;
+                    transform: scale(1.05);
+                }
+                .delete-button {
+                    background-color: #dc3545;
+                    border-color: #800020;
+                    color: #fff;
+                }
+                .delete-button:hover,
+                .delete-button:focus-visible {
+                    background-color: #800020;
+                    color: #000;
+                    transform: scale(1.05);
                 }
                 .add-button {
                     position: fixed;
                     top: 19px;
-                    left: 333px;
+                    right: 24px;
+                    z-index: 1;
                     padding: 10px 14px;
-                    background-color: #39ff14;   
-                    color: #0b3d0b;              
-                    border: 4px double #0b3d0b; 
+                    background-color: #39ff14;
+                    color: #0b3d0b;
+                    border: 4px double #0b3d0b;
                     border-radius: 7px;
                     text-decoration: none;
                     font-weight: bold;
                     transition: all 0.3s ease;
                 }
-                /* Hover (interacción) */
                 .add-button:hover {
-                    background-color: #0b3d0b;  
-                    color: #ffffff;            
-                    transform: scale(1.05);     
+                    background-color: #0b3d0b;
+                    color: #ffffff;
+                    transform: scale(1.05);
                 }
         </style>
 </head>
 
 <body>
 
+<%- include('partials/navbar') %>
 <a href="/api/paisesA/agregar" class="add-button">Agregar país</a>
 
 <section class="container" style="text-align: center;">
@@ -80,19 +120,24 @@
                 border-radius: 10px;
                 margin: 10px; ">
 
-        <h3><%= PEc.nombreOficial || PEc.nombreOfficial %></h3>
+        <div class="country-heading">
+            <h3><%= PEc.nombreOficial || PEc.nombreOfficial %></h3>
+            <% if (PEc.image) { %>
+                <img
+                    class="country-flag"
+                    src="<%= PEc.image %>"
+                    alt="Bandera de <%= PEc.nombreOficial || PEc.nombreOfficial %>"
+                >
+            <% } %>
+        </div>
         <p><strong>Nombre oficial:</strong> <%= PEc.nombreOficial || PEc.nombreOfficial %></p>
         <p><strong>Capital:</strong> <%= Array.isArray(PEc.capital) ? PEc.capital.join(', ') : PEc.capital || 'Sin capital' %></p>
         <p><strong>Idioma:</strong> <%= Array.isArray(PEc.languages) ? PEc.languages.join(', ') : PEc.languages || 'Sin idioma' %></p>
         <p><strong>Países limítrofes:</strong> <%= Array.isArray(PEc.borders) ? PEc.borders.join(', ') : PEc.borders || 'Sin fronteras' %></p>
         <p><strong>Área:</strong> <%= PEc.area %></p>
-        <% if (PEc.image) { %><img src="<%= PEc.image %>" alt="Bandera de <%= PEc.nombreOficial || PEc.nombreOfficial %>" width="100"><% } %>
-
             <!-- - BOTÓN EDITAR - -->
             <a href="/api/paisesA/editar/<%= PEc.id || PEc._id %>"
-               style="background-color: #007bff; color: white; border: none; 
-                      padding: 8px 12px; cursor: pointer; text-decoration: none; 
-                      border-radius:4px;">
+               class="card-action edit-button">
                Editar
             </a>
 
@@ -120,9 +165,8 @@
                   style="display: inline;">
 
                 <button type="button"
-                        onclick="confirmarEliminacion('<%= PEc.id || PEc._id %>')"
-                        style="background-color: #dc3545; color: white; border: none; 
-                               padding: 8px 12px; cursor: pointer; border-radius:4px;">
+                        class="card-action delete-button"
+                        onclick="confirmarEliminacion('<%= PEc.id || PEc._id %>')">
                     Eliminar
                 </button>
             </form>

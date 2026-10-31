@@ -9,9 +9,11 @@ pnpm install
 pnpm dev
 ```
 
+Abre `http://localhost:5173/`. Vite sirve la aplicación React y monta el backend Express en el mismo servidor. La página principal muestra React y la interfaz de administración del backend; sus rutas comienzan con `/api/paisesA`. No hace falta iniciar otro proceso ni usar el puerto 3000.
+
 ## Backend con MockAPI
 
-El comando `pnpm dev` inicia juntos Vite y Express. La aplicación React queda en la dirección que indique Vite (normalmente `http://localhost:5173`) y la interfaz Express en `http://localhost:3000`. El backend administra los países directamente en el recurso MockAPI usando Axios; no requiere MongoDB. Configura `VITE_MOCKAPI_URL` en el `.env` de la raíz antes de iniciar.
+El backend administra los países directamente en el recurso MockAPI usando Axios; no requiere MongoDB. Configura `VITE_MOCKAPI_URL` en el `.env` de la raíz antes de iniciar.
 
 ## Conexión con MockAPI
 
