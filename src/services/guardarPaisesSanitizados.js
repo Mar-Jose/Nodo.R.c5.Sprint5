@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 const PAISES_AMERICA_URL =
-  import.meta.env.VITE_BASE_URL_API || 'https://restcountries.com/v3.1/region/america'
+  import.meta.env.VITE_BASE_URL_API ||
+  'https://raw.githubusercontent.com/mledoze/countries/master/countries.json'
 const URL_MOCKAPI = import.meta.env.VITE_MOCKAPI_URL
 let guardadoEnCurso
 
@@ -27,7 +28,7 @@ export function guardarPaisesSanitizados() {
 
 async function sincronizarPaises() {
   if (!URL_MOCKAPI?.trim()) {
-    throw new Error('Falta configurar VITE_MOCKAPI_URL en el archivo src/.env.')
+    throw new Error('Falta configurar VITE_MOCKAPI_URL en el archivo .env de la raíz del proyecto.')
   }
 
   const { data } = await axios.get(PAISES_AMERICA_URL)
@@ -37,17 +38,14 @@ async function sincronizarPaises() {
   }
 
   const paisesPorNombre = new Map()
-  for (const pais of data.filter((pais) => pais.languages?.spa)) {
+  for (const pais of data.filter((pais) => pais.region === 'Americas' && pais.languages?.spa)) {
     const paisSanitizado = {
       nombreOficial: pais.translations?.spa?.official || pais.name?.official,
       capital: pais.capital?.[0] || '',
       languages: Object.values(pais.languages || {}).join(', '),
       borders: (pais.borders || []).join(', '),
       area: pais.area || 0,
-      population: pais.population || 0,
-      timezones: (pais.timezones || []).join(', '),
-      image: pais.flags?.png || '',
-      creador: 'MARIA JOSE',
+      image: pais.cca2 ? `https://flagcdn.com/${pais.cca2.toLowerCase()}.svg` : '',
     }
 
     if (paisSanitizado.nombreOficial) {

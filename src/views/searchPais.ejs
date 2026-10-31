@@ -1,0 +1,24 @@
+<!-- Formulario para buscar países administrados en MockAPI. -->
+<!--crea un formulario HTML que permite al usuario buscar países filtrando por un atributo específico-->
+
+<h1>Buscar País hispanohablante</h1>
+
+<form action="/api/paisesA/buscar" method="GET"> 
+ <!--Indica la URL a la que se enviarán los datos cuando el usuario haga clic en Buscar-->
+
+    <label>Atributo:</label>
+
+    <select name="atributo">
+        <option value="nombreOficial">Nombre</option>
+        <option value="capital">capital</option>
+        <option value="languages">Idioma</option>
+        <option value="borders">País limítrofe</option>
+        <option value="area">area</option>
+    </select>
+
+    <label>Valor:</label>
+
+    <input type="text" name="valor"> 
+<!--Evita una busqueda vacía-->
+    <button type="submit">Buscar</button>
+</form>
