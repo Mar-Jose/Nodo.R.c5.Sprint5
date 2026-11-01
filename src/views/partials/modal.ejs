@@ -1,0 +1,42 @@
+<% if (success) { %>
+<script>
+const mensajes = {
+  created: 'El país creado y guardado en la base de datos del grupo 30.',
+  updated: 'El país seleccionado fue editado correctamente',
+}
+
+Swal.fire({
+  icon: 'success',
+  title: 'ok',
+  text: mensajes['<%= success %>'],
+  timer: 3000,
+  showConfirmButton: false,
+})
+</script>
+<% } %>
+<script>
+window.confirmarEliminacion = function (id) {
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará permanentemente al país de su base de datos.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Eliminado',
+        text: 'El país fue borrado exitosamente.',
+        icon: 'success',
+        timer: 3000,
+        showConfirmButton: false,
+      }).then(() => {
+        document.getElementById(`form-${id}`).submit()
+      })
+    }
+  })
+}
+</script>

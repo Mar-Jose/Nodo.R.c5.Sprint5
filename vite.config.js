@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import backend from './server.mjs'
+import tailwindcss from '@tailwindcss/vite'
 
 const backendPlugin = {
   name: 'express-backend',
@@ -9,9 +10,8 @@ const backendPlugin = {
   },
 }
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), backendPlugin],
+  plugins: [react(), tailwindcss(), backendPlugin],
   server: {
     port: 5173,
     strictPort: true,

@@ -1,4 +1,5 @@
-import axios from 'axios'
+import { getMockApiHttp, isMockApiNotFound } from '../api/mockApiHttp.mjs'
+import { normalizarTexto } from '../utils/formato/normalizarTexto.js'
 
 const CAMPOS_BUSCABLES = new Set([
   'nombreOficial',
@@ -8,26 +9,13 @@ const CAMPOS_BUSCABLES = new Set([
   'area',
 ])
 
-function obtenerUrlMockApi() {
-  const url = process.env.VITE_MOCKAPI_URL?.trim()
-  if (!url) {
-    throw new Error('Falta configurar VITE_MOCKAPI_URL en el archivo .env.')
-  }
-
-  return url.replace(/\/+$/, '')
-}
-
-function normalizarValor(valor) {
-  return String(valor).normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase()
-}
-
 class paisesARepository {
   async getAll() {
     const paises = []
     const limit = 100
 
     for (let page = 1; ; page += 1) {
-      const { data } = await axios.get(obtenerUrlMockApi(), { params: { page, limit } })
+      const { data } = await getMockApiHttp().get('', { params: { page, limit } })
       if (!Array.isArray(data)) {
         throw new Error('MockAPI devolvió una respuesta inesperada al consultar los países.')
       }
@@ -39,46 +27,43 @@ class paisesARepository {
 
   async getById(id) {
     try {
-      const { data } = await axios.get(`${obtenerUrlMockApi()}/${encodeURIComponent(id)}`)
+      const { data } = await getMockApiHttp().get(encodeURIComponent(id))
       return data
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) return null
+      if (isMockApiNotFound(error)) return null
       throw error
     }
   }
 
   async create(data) {
-    const { data: paisCreado } = await axios.post(obtenerUrlMockApi(), data)
+    const { data: paisCreado } = await getMockApiHttp().post('', data)
     return paisCreado
   }
 
   async update(id, data) {
     try {
-      const { data: paisActualizado } = await axios.put(
-        `${obtenerUrlMockApi()}/${encodeURIComponent(id)}`,
-        data,
-      )
+      const { data: paisActualizado } = await getMockApiHttp().put(encodeURIComponent(id), data)
       return paisActualizado
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) return null
+      if (isMockApiNotFound(error)) return null
       throw error
     }
   }
 
   async delete(id) {
     try {
-      const { data } = await axios.delete(`${obtenerUrlMockApi()}/${encodeURIComponent(id)}`)
+      const { data } = await getMockApiHttp().delete(encodeURIComponent(id))
       return data
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) return null
+      if (isMockApiNotFound(error)) return null
       throw error
     }
   }
 
   async existsByNombre(nombreOficial) {
-    const clave = normalizarValor(nombreOficial)
+    const clave = normalizarTexto(nombreOficial)
     const paises = await this.getAll()
-    return paises.some((pais) => normalizarValor(pais.nombreOficial || pais.nombreOfficial) === clave)
+    return paises.some((pais) => normalizarTexto(pais.nombreOficial || pais.nombreOfficial) === clave)
   }
 
   async buscarPorAtributo(atributo, valor) {
@@ -86,9 +71,9 @@ class paisesARepository {
       throw new Error('El atributo indicado no se puede buscar.')
     }
 
-    const clave = normalizarValor(valor)
+    const clave = normalizarTexto(valor)
     const paises = await this.getAll()
-    return paises.filter((pais) => normalizarValor(pais[atributo] ?? '').includes(clave))
+    return paises.filter((pais) => normalizarTexto(pais[atributo] ?? '').includes(clave))
   }
 }
 

@@ -4,93 +4,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar País: <%= paisesE.nombreOficial || paisesE.nombreOfficial %></title>
-
-    <style> 
-        body { font-family: sans-serif; background-color: #f0f0f0; padding: 20px; }
-        .form-container { max-width: 600px; margin: 0 auto; background: rgb(133, 193, 77); padding: 20px; border: 1px solid #ccc; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input[type="text"], input[type="number"], textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; box-sizing: border-box; }
-        .boton-guardar {
-            margin-top: 20px;
-            padding: 10px 15px;
-            background-color: #d0ebff;  
-            color: #003366;             
-            border: 3px double #003366;  
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .boton-guardar:hover {
-            background-color: #003366;   
-            color: white;
-            transform: scale(1.05);
-        }
-        .error-message { color: red; margin-top: 5px; }
-    </style>
+    <link rel="stylesheet" href="/src/index.css">
     </head>
-<body>
+<body class="m-0 min-h-screen min-w-[320px] bg-[#f0f0f0] p-5 font-sans text-[#242424]">
 
-    <%- include('partials/navbar') %>
+    <%- include('./partials/navbar') %>
 
-    <div class="form-container">
-        <h1>Editar País: <%= paisesE.nombreOficial || paisesE.nombreOfficial %></h1>
+    <div class="mx-auto max-w-[600px] border border-[#ccc] bg-[rgb(133,193,77)] p-5">
+        <h1 class="mb-4 text-2xl font-bold">Editar País: <%= paisesE.nombreOficial || paisesE.nombreOfficial %></h1>
 
-        <form action="/api/paisesA/editar/<%= paisesE.id || paisesE._id %>?_method=PUT" method="POST">
+        <form class="space-y-2" action="/api/paisesA/editar/<%= paisesE.id || paisesE._id %>?_method=PUT" method="POST">
                     <!--para html post ya no acepta put-->
     <!--para cumplir con 1 standard se escribe put q lo convierte en post con el método override, el servidor lo interpreta como put-->
     <!-- validaciones tipo from, que son las q aparecen en html instantaneamente -->  
    
-   <label>Nombre oficial del país:</label>
-   <input type="text" name="nombreOficial" value="<%= paisesE.nombreOficial || paisesE.nombreOfficial || '' %>" required minlength="3" maxlength="90">
-   <span style="color: rgb(105, 19, 19)"> Nombre oficial del país es requerido debe tener entre  3-90 caracteres</span>
+   <label class="mt-2.5 block font-bold">Nombre oficial del país:</label>
+   <input class="mt-1 w-full border border-[#ddd] p-2" type="text" name="nombreOficial" value="<%= paisesE.nombreOficial || paisesE.nombreOfficial || '' %>" required minlength="3" maxlength="90">
+   <span class="block text-[rgb(105,19,19)]"> Nombre oficial del país es requerido debe tener entre  3-90 caracteres</span>
 
-    <label>Capital:</label>
-    <input type="text" name="capital" value="<%= Array.isArray(paisesE.capital) ? paisesE.capital.join(', ') : paisesE.capital || '' %>" required minlength="3" maxlength="90">
-    <span style="color: rgb(105, 19, 19)"> La capital del país es requerido, debe tener entre 3 hasta 90 letras</span>
+    <label class="mt-2.5 block font-bold">Capital:</label>
+    <input class="mt-1 w-full border border-[#ddd] p-2" type="text" name="capital" value="<%= Array.isArray(paisesE.capital) ? paisesE.capital.join(', ') : paisesE.capital || '' %>" required minlength="3" maxlength="90">
+    <span class="block text-[rgb(105,19,19)]"> La capital del país es requerido, debe tener entre 3 hasta 90 letras</span>
     
-    <label>Países limítrofes:</label>
-    <input type="text" name="borders" value="<%= Array.isArray(paisesE.borders) ? paisesE.borders.join(', ') : paisesE.borders || '' %>" pattern="^([A-Z]{3})(([, ]+[A-Z]{3})*)$" placeholder="Ej: ARG, BRA">
-    <span style="color: rgb(105, 19, 19)"> Opcional: códigos de 3 letras separados por coma o espacio</span>
+    <label class="mt-2.5 block font-bold">Países limítrofes:</label>
+    <input class="mt-1 w-full border border-[#ddd] p-2" type="text" name="borders" value="<%= Array.isArray(paisesE.borders) ? paisesE.borders.join(', ') : paisesE.borders || '' %>" pattern="^([A-Z]{3})(([, ]+[A-Z]{3})*)$" placeholder="Ej: ARG, BRA">
+    <span class="block text-[rgb(105,19,19)]"> Opcional: códigos de 3 letras separados por coma o espacio</span>
 
-    <label>Área:</label>
-    <input type="number" name="area" value="<%= paisesE.area %>" required min="0" title="El área del país es requerida">
-    <span style="color: rgb(105, 19, 19)"> El área del país debe ser un número positivo</span>
+    <label class="mt-2.5 block font-bold">Área:</label>
+    <input class="mt-1 w-full border border-[#ddd] p-2" type="number" name="area" value="<%= paisesE.area %>" required min="0" title="El área del país es requerida">
+    <span class="block text-[rgb(105,19,19)]"> El área del país debe ser un número positivo</span>
 
-    <label for="languages">Idioma:</label>
-    <input type="text" id="languages" name="languages" value="<%= Array.isArray(paisesE.languages) ? paisesE.languages.join(', ') : paisesE.languages || '' %>" required>
-    <span style="color: rgb(105, 19, 19)">El idioma es requerido.</span>
+    <label class="mt-2.5 block font-bold" for="languages">Idioma:</label>
+    <input class="mt-1 w-full border border-[#ddd] p-2" type="text" id="languages" name="languages" value="<%= Array.isArray(paisesE.languages) ? paisesE.languages.join(', ') : paisesE.languages || '' %>" required>
+    <span class="block text-[rgb(105,19,19)]">El idioma es requerido.</span>
 
-    <label for="image">URL de bandera:</label>
-    <input type="url" id="image" name="image" value="<%= paisesE.image || '' %>">
+    <label class="mt-2.5 block font-bold" for="image">URL de bandera:</label>
+    <input class="mt-1 w-full border border-[#ddd] p-2" type="url" id="image" name="image" value="<%= paisesE.image || '' %>">
     
     <%# sprint 3. tp 3. Etapa 3. %>
-           <button type="submit"
-                style="
-                    margin-top: 20px;
-                    padding: 8px 12px;
-                    background-color: #d0ebff;   
-                    color: #003366;              
-                    border: 2px solid #003366;   
-                    border-radius: 5px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: 0.3s;
-                "
-                onmouseover="
-                    this.style.backgroundColor='#003366';
-                    this.style.color='white';
-                "
-                onmouseout="
-                    this.style.backgroundColor='#d0ebff';
-                    this.style.color='#003366';
-                "
-                >
+           <button class="mt-5 cursor-pointer rounded-[5px] border-2 border-[#003366] bg-[#d0ebff] px-3 py-2 font-bold text-[#003366] transition duration-300 hover:scale-105 hover:bg-[#003366] hover:text-white focus-visible:scale-105 focus-visible:bg-[#003366] focus-visible:text-white" type="submit">
                 Guardar Cambios
             </button>
-            <a href="/api/paisesA" style="margin-left: 15px;">Cancelar</a>
+            <a class="ml-4" href="/api/paisesA">Cancelar</a>
 
         </form>
     </div>

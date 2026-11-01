@@ -1,26 +1,28 @@
-<!-- Formulario para buscar países administrados en MockAPI. -->
-<!--crea un formulario HTML que permite al usuario buscar países filtrando por un atributo específico-->
-
-<%- include('partials/navbar') %>
-
-<h1>Buscar País hispanohablante</h1>
-
-<form action="/api/paisesA/buscar" method="GET"> 
- <!--Indica la URL a la que se enviarán los datos cuando el usuario haga clic en Buscar-->
-
-    <label>Atributo:</label>
-
-    <select name="atributo">
-        <option value="nombreOficial">Nombre</option>
-        <option value="capital">capital</option>
-        <option value="languages">Idioma</option>
-        <option value="borders">País limítrofe</option>
-        <option value="area">area</option>
-    </select>
-
-    <label>Valor:</label>
-
-    <input type="text" name="valor"> 
-<!--Evita una busqueda vacía-->
-    <button type="submit">Buscar</button>
-</form>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar país</title>
+    <link rel="stylesheet" href="/src/index.css">
+</head>
+<body class="m-0 min-h-screen min-w-[320px] bg-[#f0f0f0] p-5 font-sans text-[#242424]">
+    <%- include('./partials/navbar') %>
+    <main class="mx-auto max-w-[600px]">
+        <h1 class="my-4 text-2xl font-bold">Buscar País hispanohablante</h1>
+        <form class="space-y-3" action="/api/paisesA/buscar" method="GET">
+            <label class="block font-bold" for="atributo">Atributo:</label>
+            <select class="w-full border border-[#ddd] bg-white p-2" id="atributo" name="atributo">
+                <option value="nombreOficial">Nombre</option>
+                <option value="capital">capital</option>
+                <option value="languages">Idioma</option>
+                <option value="borders">País limítrofe</option>
+                <option value="area">area</option>
+            </select>
+            <label class="block font-bold" for="valor">Valor:</label>
+            <input class="w-full border border-[#ddd] p-2" id="valor" type="text" name="valor">
+            <button class="cursor-pointer rounded-[5px] border-2 border-[#003366] bg-[#d0ebff] px-3 py-2 font-bold text-[#003366] transition duration-300 hover:bg-[#003366] hover:text-white focus-visible:bg-[#003366] focus-visible:text-white" type="submit">Buscar</button>
+        </form>
+    </main>
+</body>
+</html>

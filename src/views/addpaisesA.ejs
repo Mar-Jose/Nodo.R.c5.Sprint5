@@ -4,94 +4,54 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Agregar País</title>
-    <style> 
-        body { font-family: sans-serif; background-color: #f0f0f0; padding: 20px; }
-         /*(ajuste ancho de ventana) .form-container { display: inline-block; width: auto; max-width: 600px; background: white; padding: 20px; border: 4px double black; border-radius: 8px; margin: 20px;} */
-         .form-container { max-width: 600px; margin: 0 auto; background: rgb(133, 193, 77); padding: 20px; border: 1px solid #ccc; } 
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input[type="text"], input[type="number"], textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { margin-top: 20px; padding: 10px 15px; background-color: #007bff; color: white; border: none; cursor: pointer; }
-    </style>
+    <link rel="stylesheet" href="/src/index.css">
 </head>
-<body>
-<%- include('partials/navbar') %>
+<body class="m-0 min-h-screen min-w-[320px] bg-[#f0f0f0] p-5 font-sans text-[#242424]">
+<%- include('./partials/navbar') %>
 <!-- sprint 3. tp 3. Etapa 3. Requerimiento 5.  -->
    
- <div class="form-container">
-  <h2>Agregar Nuevo País</h2>
-  <form action="/api/paisesA/agregar" method="POST">
+ <div class="mx-auto max-w-[600px] border border-[#ccc] bg-[rgb(133,193,77)] p-5">
+  <h2 class="mb-4 text-2xl font-bold">Agregar Nuevo País</h2>
+  <form class="space-y-2" action="/api/paisesA/agregar" method="POST">
 <!-- validaciones tipo from, que son las q aparecen en html instantaneamente -->   
 
-   <label>Nombre oficial del país:</label>
-   <input type="text" name="nombreOficial" required minlength="3" maxlength="90">
-   <span style="color: rgb(105, 19, 19)"> Nombre oficial del país es requerido debe tener entre  3-90 caracteres</span>
+   <label class="mt-2.5 block font-bold">Nombre oficial del país:</label>
+   <input class="mt-1 w-full border border-[#ddd] p-2" type="text" name="nombreOficial" required minlength="3" maxlength="90">
+   <span class="block text-[rgb(105,19,19)]"> Nombre oficial del país es requerido debe tener entre  3-90 caracteres</span>
 
-    <label>capital del país:</label>
-    <input type="text" name="capital" required minlength="3" maxlength="90">
-    <span style="color: rgb(105, 19, 19)"> La capital del país es requerido, debe tener entre 3 hasta 90 letras</span>
+    <label class="mt-2.5 block font-bold">capital del país:</label>
+    <input class="mt-1 w-full border border-[#ddd] p-2" type="text" name="capital" required minlength="3" maxlength="90">
+    <span class="block text-[rgb(105,19,19)]"> La capital del país es requerido, debe tener entre 3 hasta 90 letras</span>
     
-    <label>Países limítrofes:</label>
-    <input type="text" name="borders" pattern="^([A-Z]{3})(([, ]+[A-Z]{3})*)$" placeholder="Ej: ARG, BRA">
-    <span style="color: rgb(105, 19, 19)"> Opcional: códigos de 3 letras separados por coma o espacio</span>
+    <label class="mt-2.5 block font-bold">Países limítrofes:</label>
+    <input class="mt-1 w-full border border-[#ddd] p-2" type="text" name="borders" pattern="^([A-Z]{3})(([, ]+[A-Z]{3})*)$" placeholder="Ej: ARG, BRA">
+    <span class="block text-[rgb(105,19,19)]"> Opcional: códigos de 3 letras separados por coma o espacio</span>
 
-    <label>Área:</label>
-    <input type="number" name="area" required min="0">
-    <span style="color: rgb(105, 19, 19)"> El área del país debe ser un número positivo</span>
+    <label class="mt-2.5 block font-bold">Área:</label>
+    <input class="mt-1 w-full border border-[#ddd] p-2" type="number" name="area" required min="0">
+    <span class="block text-[rgb(105,19,19)]"> El área del país debe ser un número positivo</span>
 
-<label for="languages">Idioma:</label>
-<input type="text" id="languages" name="languages" required>
+<label class="mt-2.5 block font-bold" for="languages">Idioma:</label>
+<input class="mt-1 w-full border border-[#ddd] p-2" type="text" id="languages" name="languages" required>
 
-<label for="image">URL de bandera:</label>
-<input type="url" id="image" name="image">
+<label class="mt-2.5 block font-bold" for="image">URL de bandera:</label>
+<input class="mt-1 w-full border border-[#ddd] p-2" type="url" id="image" name="image">
 
 <% if (typeof errores !== 'undefined' && errores.length) { %>
-  <ul style="color: #a00">
+  <ul class="text-[#a00]">
     <% errores.forEach(error => { %><li><%= error.msg %></li><% }) %>
   </ul>
 <% } %>
 
 <!-- sprint 3. tp 3. Etapa 3. Requerimiento 6: <button type="submit">Guardar Superhéroe</button> -->
 
-   <button type="submit"
-   style="
-      margin-top: 20px;
-      padding: 8px 12px;
-      background-color: #dbeecb;   
-      color: #2f4f2f;              
-      border: 2px solid #2f4f2f;   
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-   "
-   onmouseover="
-      this.style.backgroundColor='#2f4f2f';
-      this.style.color='white';
-   "
-   onmouseout="
-      this.style.backgroundColor='#dbeecb';
-      this.style.color='#2f4f2f';
-   "
->
+   <button class="mt-5 cursor-pointer rounded-[5px] border-2 border-[#2f4f2f] bg-[#dbeecb] px-3 py-2 font-bold text-[#2f4f2f] transition duration-300 hover:bg-[#2f4f2f] hover:text-white focus-visible:bg-[#2f4f2f] focus-visible:text-white" type="submit">
    Guardar País
 </button>
 
-   <a href="/api/paisesA" 
-   style="
-      margin-left: 15px;
-      padding: 8px 12px;
-      background-color: #ffe6f0;
-      color: #800020;
-      border: 2px solid #800020;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-   "
-   onmouseover="this.style.backgroundColor='#800020'; this.style.color='white';"
-   onmouseout="this.style.backgroundColor='#ffe6f0'; this.style.color='#800020';"
->
+   <a class="ml-4 inline-block rounded-[5px] border-2 border-[#800020] bg-[#ffe6f0] px-3 py-2 font-bold text-[#800020] no-underline transition duration-300 hover:bg-[#800020] hover:text-white focus-visible:bg-[#800020] focus-visible:text-white" href="/api/paisesA">
    Volver
 </a>   
  </form>

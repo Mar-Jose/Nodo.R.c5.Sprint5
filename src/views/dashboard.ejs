@@ -5,167 +5,59 @@
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
  <title>Países Hispanohablantes</title>
+ <link rel="stylesheet" href="/src/index.css">
 
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-        <style>
-                body {
-                    font-family: sans-serif;
-                    background-color: #57977f; 
-                }
-                .container {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding: 20px;
-                }
-                .paisP-card {
-                    border: 1px solid #ccc;
-                    padding: 15px;
-                    margin-bottom: 20px;
-                    background-color: white;
-                }
-                .country-heading {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                }
-                .country-flag {
-                    width: 64px;
-                    height: 42px;
-                    object-fit: contain;
-                }
-                .card-action {
-                    display: inline-block;
-                    padding: 8px 12px;
-                    margin-right: 5px;
-                    cursor: pointer;
-                    border: 4px double;
-                    border-radius: 7px;
-                    font: inherit;
-                    font-weight: bold;
-                    text-decoration: none;
-                    transition: all 0.3s ease;
-                }
-                .edit-button {
-                    background-color: #007bff;
-                    border-color: #003366;
-                    color: #fff;
-                }
-                .edit-button:hover,
-                .edit-button:focus-visible {
-                    background-color: #003366;
-                    color: #000;
-                    transform: scale(1.05);
-                }
-                .delete-button {
-                    background-color: #dc3545;
-                    border-color: #800020;
-                    color: #fff;
-                }
-                .delete-button:hover,
-                .delete-button:focus-visible {
-                    background-color: #800020;
-                    color: #000;
-                    transform: scale(1.05);
-                }
-                .add-button {
-                    position: fixed;
-                    top: 19px;
-                    right: 24px;
-                    z-index: 1;
-                    padding: 10px 14px;
-                    background-color: #39ff14;
-                    color: #0b3d0b;
-                    border: 4px double #0b3d0b;
-                    border-radius: 7px;
-                    text-decoration: none;
-                    font-weight: bold;
-                    transition: all 0.3s ease;
-                }
-                .add-button:hover {
-                    background-color: #0b3d0b;
-                    color: #ffffff;
-                    transform: scale(1.05);
-                }
-        </style>
 </head>
 
-<body>
+<body class="m-0 min-h-screen min-w-[320px] bg-[#57977f] font-sans text-[#242424]">
 
-<%- include('partials/navbar') %>
-<a href="/api/paisesA/agregar" class="add-button">Agregar país</a>
+<%- include('./partials/navbar') %>
 
-<section class="container" style="text-align: center;">
+<section class="mx-auto max-w-[1200px] p-5 text-center">
     
-    <h1>Países</h1>
-    <h2>Hispanohablantes</h2>
+    <h1 class="my-4 text-3xl font-bold">Países</h1>
+    <h2 class="my-4 text-2xl font-bold">Hispanohablantes</h2>
 </section>
      
 
-<main class="container">
- <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+<main class="mx-auto max-w-[1200px] p-5">
+ <div class="flex flex-wrap gap-5">
 
  <% if (paisesD.length > 0) { %>
  <% paisesD.forEach(PEc => { %>
 
-    <!-- <article class="hero-card" style="flex: 1 1 calc(50% - 20px);"> -->
-        <article class="paisP-card" 
-        style="
-                display: inline-block; 
-                width: auto;
-                max-width: 500px;
-                padding: 20px; 
-                background: #ffe6f2;        
-                border: 4px double #000;    
-                border-radius: 10px;
-                margin: 10px; ">
+        <article class="m-[10px] inline-block w-auto max-w-[500px] rounded-[10px] border-4 border-double border-black bg-[#ffe6f2] p-5">
 
-        <div class="country-heading">
-            <h3><%= PEc.nombreOficial || PEc.nombreOfficial %></h3>
+        <div class="flex items-center gap-3">
+            <h3 class="my-4 text-xl font-bold"><%= PEc.nombreOficial || PEc.nombreOfficial %></h3>
             <% if (PEc.image) { %>
                 <img
-                    class="country-flag"
+                    class="h-[42px] w-16 object-contain"
                     src="<%= PEc.image %>"
                     alt="Bandera de <%= PEc.nombreOficial || PEc.nombreOfficial %>"
                 >
             <% } %>
         </div>
-        <p><strong>Nombre oficial:</strong> <%= PEc.nombreOficial || PEc.nombreOfficial %></p>
-        <p><strong>Capital:</strong> <%= Array.isArray(PEc.capital) ? PEc.capital.join(', ') : PEc.capital || 'Sin capital' %></p>
-        <p><strong>Idioma:</strong> <%= Array.isArray(PEc.languages) ? PEc.languages.join(', ') : PEc.languages || 'Sin idioma' %></p>
-        <p><strong>Países limítrofes:</strong> <%= Array.isArray(PEc.borders) ? PEc.borders.join(', ') : PEc.borders || 'Sin fronteras' %></p>
-        <p><strong>Área:</strong> <%= PEc.area %></p>
+        <p class="my-4"><strong>Nombre oficial:</strong> <%= PEc.nombreOficial || PEc.nombreOfficial %></p>
+        <p class="my-4"><strong>Capital:</strong> <%= Array.isArray(PEc.capital) ? PEc.capital.join(', ') : PEc.capital || 'Sin capital' %></p>
+        <p class="my-4"><strong>Idioma:</strong> <%= Array.isArray(PEc.languages) ? PEc.languages.join(', ') : PEc.languages || 'Sin idioma' %></p>
+        <p class="my-4"><strong>Países limítrofes:</strong> <%= Array.isArray(PEc.borders) ? PEc.borders.join(', ') : PEc.borders || 'Sin fronteras' %></p>
+        <p class="my-4"><strong>Área:</strong> <%= PEc.area %></p>
             <!-- - BOTÓN EDITAR - -->
             <a href="/api/paisesA/editar/<%= PEc.id || PEc._id %>"
-               class="card-action edit-button">
+               class="mr-1 inline-block cursor-pointer rounded-[7px] border-4 border-double border-[#003366] bg-[#007bff] px-3 py-2 font-sans font-bold text-white no-underline transition-all duration-300 hover:scale-105 hover:bg-[#003366] hover:text-black focus-visible:scale-105 focus-visible:bg-[#003366] focus-visible:text-black">
                Editar
             </a>
-
-                    <% if (success) { %>
-                <script>
-                let mensajes = {
-                    created: 'El país creado y guardado en la base de datos del grupo 30.',
-                    updated: 'El país seleccionado fue editado correctamente',
-                };
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'ok',
-                    text: mensajes['<%= success %>'],
-                    timer: 3000,
-                    showConfirmButton: false
-                });
-                </script>
-                <% } %>
 
             <!-- Sprint 3. tp 3. Etapa 5. Requerimiento 1: BOTÓN ELIMINAR -->
             <form id="form-<%= PEc.id || PEc._id %>" 
                   action="/api/paisesA/id/<%= PEc.id || PEc._id %>?_method=DELETE" 
                   method="POST" 
-                  style="display: inline;">
+                  class="inline">
 
                 <button type="button"
-                        class="card-action delete-button"
+                        class="mr-1 inline-block cursor-pointer rounded-[7px] border-4 border-double border-[#800020] bg-[#dc3545] px-3 py-2 font-sans font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-[#800020] hover:text-black focus-visible:scale-105 focus-visible:bg-[#800020] focus-visible:text-black"
                         onclick="confirmarEliminacion('<%= PEc.id || PEc._id %>')">
                     Eliminar
                 </button>
@@ -175,38 +67,13 @@
 
  <% }) %>
  <% } else { %>
-    <p>No hay un país para mostrar.</p>
+    <p class="my-4">No hay un país para mostrar.</p>
  <% } %>
 
  </div>
 </main>
 
-<script>
-function confirmarEliminacion(PEc) {
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: 'Esta acción eliminará permanentemente al país de su base de datos.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: 'Eliminado',
-                text: 'El país fue borrado exitosamente.',
-                icon: 'success',
-                timer: 3000,
-                showConfirmButton: false
-            }).then(() => {
-                document.getElementById('form-' + PEc).submit();
-            });
-        }
-    });
-}
-</script>
+<%- include('./partials/modal', { success }) %>
 
 </body>
 </html>

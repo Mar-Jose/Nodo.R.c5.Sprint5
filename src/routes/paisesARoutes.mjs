@@ -11,7 +11,7 @@ import {
 } from '../controllers/paisesAController.mjs';
 
 import { paisesAValidations } from '../validations/paisesAValidaciones.mjs';
-import { validate } from '../validations/validationMiddlewre.mjs';
+import { validate } from '../validations/validationMiddleware.mjs';
 
 const router = express.Router();
 

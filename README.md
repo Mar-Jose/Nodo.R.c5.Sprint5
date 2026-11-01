@@ -1,6 +1,4 @@
-# Proyecto React
-
-Proyecto base con React y Vite.
+# CRUD de países con React, Express y MockAPI
 
 ## Desarrollo
 
@@ -9,19 +7,35 @@ pnpm install
 pnpm dev
 ```
 
-Abre `http://localhost:5173/`. Vite sirve la aplicación React y monta el backend Express en el mismo servidor. La página principal muestra React y la interfaz de administración del backend; sus rutas comienzan con `/api/paisesA`. No hace falta iniciar otro proceso ni usar el puerto 3000.
+Abre `http://localhost:5173/`. Vite sirve la aplicación React y monta el backend Express en el mismo servidor. React consume los endpoints JSON de Express en `/api/paises`, y Express usa MockAPI como persistencia. No hace falta iniciar otro proceso ni usar el puerto 3000.
 
-## Backend con MockAPI
+La interfaz React permite listar países, consultar el detalle, crear, editar y eliminar. Las vistas EJS anteriores siguen disponibles bajo `/api/paisesA`.
 
-El backend administra los países directamente en el recurso MockAPI usando Axios; no requiere MongoDB. Configura `VITE_MOCKAPI_URL` en el `.env` de la raíz antes de iniciar.
+La arquitectura del frontend mantiene el cliente Axios en `src/api/`, las operaciones de países en `src/services/`, el estado del CRUD en `src/context/PaisesContext.jsx` y la presentación en `src/components/`.
 
-## Conexión con MockAPI
+## Configuración de MockAPI
 
-La interfaz React obtiene el listado desde el JSON público de [mledoze/countries](https://github.com/mledoze/countries) configurado en `VITE_BASE_URL_API`, filtra países de América que incluyen español y sincroniza los registros con MockAPI mediante Axios. Las banderas se muestran desde FlagCDN usando el código ISO de cada país.
+Configura `VITE_MOCKAPI_URL` en el `.env` de la raíz con la URL del recurso de MockAPI, por ejemplo `https://<proyecto>.mockapi.io/api/v1/paises`. El backend usa Axios para comunicarse con ese recurso; no requiere MongoDB.
 
-Pulsa **Obtener y guardar países** para sincronizar los registros. Las ejecuciones siguientes actualizan el país existente en vez de agregarlo otra vez, y eliminan duplicados previos del mismo país. Reinicia `pnpm dev` después de cambiar las URLs del archivo `.env`.
+La acción **Sincronizar desde fuente** descarga los países de América que incluyen español desde `VITE_BASE_URL_API` (o desde el JSON de `mledoze/countries` por defecto), y crea o actualiza los registros en MockAPI. Esta operación se ejecuta en el backend.
 
-El proyecto `mledoze/countries` publica los datos bajo la licencia ODbL; consulta sus condiciones de atribución y uso en el repositorio antes de redistribuir los datos.
+El proyecto `mledoze/countries` publica los datos bajo la licencia ODbL; consulta sus condiciones de atribución y uso antes de redistribuirlos.
+
+## API JSON
+
+El frontend React llama a Express, y Express ejecuta las operaciones correspondientes en MockAPI:
+
+| Método | Endpoint | Operación |
+| --- | --- | --- |
+| GET | `/api/paises` | Lista países |
+| GET | `/api/paises/:id` | Obtiene el detalle de un país |
+| POST | `/api/paises` | Crea un país |
+| PUT | `/api/paises/:id` | Actualiza un país |
+| DELETE | `/api/paises/:id` | Elimina un país |
+
+Las rutas de administración EJS anteriores continúan disponibles en `/api/paisesA`. Reinicia `pnpm dev` después de cambiar la URL de MockAPI.
+
+Los estilos de React y de las vistas EJS están hechos con utilidades de Tailwind CSS.
 
 ## Validación
 
