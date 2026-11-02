@@ -2,23 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { paisesApi } from '../services/paisesApi.js'
 import { PaisesContext } from './paisesContext.js'
 
-const PAIS_VACIO = {
-  nombreOficial: '',
-  capital: '',
-  languages: '',
-  borders: '',
-  area: '',
-  image: '',
-}
-
-function mostrarValor(valor, alternativo = '') {
-  if (Array.isArray(valor)) return valor.join(', ')
-  if (valor === null || valor === undefined) return alternativo
-  return String(valor)
-}
-
 function obtenerIdPais(pais) {
   return pais.id ?? pais._id
+}
+
+function mismoIdPais(pais, id) {
+  const idPais = obtenerIdPais(pais)
+  return idPais !== undefined && String(idPais) === String(id)
 }
 
 export function PaisesProvider({ children }) {
@@ -27,10 +17,8 @@ export function PaisesProvider({ children }) {
   const [guardando, setGuardando] = useState(false)
   const [sincronizando, setSincronizando] = useState(false)
   const [error, setError] = useState('')
+  const [errorCarga, setErrorCarga] = useState('')
   const [mensaje, setMensaje] = useState('')
-  const [paisSeleccionado, setPaisSeleccionado] = useState(null)
-  const [modoFormulario, setModoFormulario] = useState('')
-  const [formulario, setFormulario] = useState(PAIS_VACIO)
 
   useEffect(() => {
     let activo = true
@@ -38,10 +26,16 @@ export function PaisesProvider({ children }) {
     paisesApi
       .listar()
       .then((resultado) => {
-        if (activo) setPaises(resultado)
+        if (activo) {
+          setPaises(resultado)
+          setErrorCarga('')
+        }
       })
       .catch((errorCarga) => {
-        if (activo) setError(errorCarga.message)
+        if (activo) {
+          setError(errorCarga.message)
+          setErrorCarga(errorCarga.message)
+        }
       })
       .finally(() => {
         if (activo) setCargando(false)
@@ -52,119 +46,126 @@ export function PaisesProvider({ children }) {
     }
   }, [])
 
-  const iniciarCreacion = useCallback(() => {
-    setPaisSeleccionado(null)
-    setFormulario(PAIS_VACIO)
-    setModoFormulario('crear')
+  const reintentarCarga = useCallback(async () => {
+    setCargando(true)
     setError('')
-    setMensaje('')
-  }, [])
-
-  const verDetalle = useCallback(async (id) => {
-    setError('')
-    setMensaje('')
+    setErrorCarga('')
     try {
-      setPaisSeleccionado(await paisesApi.obtener(id))
-      setModoFormulario('')
-    } catch (errorDetalle) {
-      setError(errorDetalle.message)
+      setPaises(await paisesApi.listar())
+    } catch (errorCargaPaises) {
+      setError(errorCargaPaises.message)
+      setErrorCarga(errorCargaPaises.message)
+    } finally {
+      setCargando(false)
     }
   }, [])
 
-  const iniciarEdicion = useCallback(() => {
-    if (!paisSeleccionado) return
-
-    setFormulario({
-      nombreOficial: paisSeleccionado.nombreOficial || paisSeleccionado.nombreOfficial || '',
-      capital: mostrarValor(paisSeleccionado.capital),
-      languages: mostrarValor(paisSeleccionado.languages),
-      borders: mostrarValor(paisSeleccionado.borders),
-      area: paisSeleccionado.area ?? '',
-      image: paisSeleccionado.image || '',
-    })
-    setModoFormulario('editar')
+  const limpiarNotificaciones = useCallback(() => {
     setError('')
     setMensaje('')
-  }, [paisSeleccionado])
-
-  const cambiarCampo = useCallback((name, value) => {
-    setFormulario((actual) => ({ ...actual, [name]: value }))
   }, [])
 
-  const cancelarFormulario = useCallback(() => {
-    setModoFormulario('')
-    setFormulario(PAIS_VACIO)
+  const refrescarListado = useCallback(async (mensajeError) => {
+    try {
+      setPaises(await paisesApi.listar())
+      setErrorCarga('')
+    } catch (errorRefresco) {
+      setError(`${mensajeError} ${errorRefresco.message}`)
+    }
   }, [])
 
-  const cerrarDetalle = useCallback(() => {
-    setPaisSeleccionado(null)
-    setModoFormulario('')
+  const informarCancelacionEliminacion = useCallback(() => {
+    setError('')
+    setMensaje('Eliminación cancelada. No se realizaron cambios.')
   }, [])
 
-  const guardarPais = useCallback(
-    async (event) => {
-      event.preventDefault()
-      setGuardando(true)
-      setError('')
-      setMensaje('')
+  const crearPais = useCallback(async (datos) => {
+    setGuardando(true)
+    setError('')
+    setMensaje('')
+    let creado
+    try {
+      creado = await paisesApi.crear(datos)
+    } catch (errorCreacion) {
+      setError(errorCreacion.message)
+      throw errorCreacion
+    } finally {
+      setGuardando(false)
+    }
+    setPaises((actuales) => {
+      const idCreado = obtenerIdPais(creado)
+      if (idCreado == null) return actuales
+      return [...actuales.filter((pais) => !mismoIdPais(pais, idCreado)), creado]
+    })
+    setMensaje('País creado correctamente.')
+    await refrescarListado(
+      'El país se creó correctamente, pero no se pudo actualizar el listado.',
+    )
+    return creado
+  }, [refrescarListado])
 
-      const datos = {
-        ...formulario,
-        area: Number(formulario.area),
-      }
+  const actualizarPais = useCallback(async (id, datos) => {
+    setGuardando(true)
+    setError('')
+    setMensaje('')
+    let actualizado
+    try {
+      actualizado = await paisesApi.actualizar(id, datos)
+    } catch (errorActualizacion) {
+      setError(errorActualizacion.message)
+      throw errorActualizacion
+    } finally {
+      setGuardando(false)
+    }
+    const paisActualizado = {
+      ...actualizado,
+      id: obtenerIdPais(actualizado) ?? id,
+    }
+    setPaises((actuales) =>
+      actuales.map((pais) => (mismoIdPais(pais, id) ? paisActualizado : pais)),
+    )
+    setMensaje('País actualizado correctamente.')
+    await refrescarListado(
+      'El país se actualizó correctamente, pero no se pudo actualizar el listado.',
+    )
+    return paisActualizado
+  }, [refrescarListado])
 
-      try {
-        if (modoFormulario === 'editar' && paisSeleccionado) {
-          const actualizado = await paisesApi.actualizar(obtenerIdPais(paisSeleccionado), datos)
-          setPaisSeleccionado(actualizado)
-          setMensaje('País actualizado correctamente.')
-        } else {
-          setPaisSeleccionado(await paisesApi.crear(datos))
-          setMensaje('País creado correctamente.')
-        }
-
-        setPaises(await paisesApi.listar())
-        setModoFormulario('')
-        setFormulario(PAIS_VACIO)
-      } catch (errorGuardado) {
-        setError(errorGuardado.message)
-      } finally {
-        setGuardando(false)
-      }
-    },
-    [formulario, modoFormulario, paisSeleccionado],
-  )
-
-  const eliminarPais = useCallback(async () => {
-    if (!paisSeleccionado) return
-
+  const eliminarPais = useCallback(async (id) => {
     setError('')
     setMensaje('')
     try {
-      await paisesApi.eliminar(obtenerIdPais(paisSeleccionado))
-      setPaises(await paisesApi.listar())
-      setPaisSeleccionado(null)
-      setModoFormulario('')
-      setMensaje('País eliminado correctamente.')
+      await paisesApi.eliminar(id)
     } catch (errorEliminacion) {
       setError(errorEliminacion.message)
+      throw errorEliminacion
     }
-  }, [paisSeleccionado])
+    setPaises((actuales) => actuales.filter((pais) => !mismoIdPais(pais, id)))
+    setMensaje('País eliminado correctamente.')
+    await refrescarListado(
+      'El país se eliminó correctamente, pero no se pudo actualizar el listado.',
+    )
+  }, [refrescarListado])
 
   const sincronizarPaises = useCallback(async () => {
     setSincronizando(true)
     setError('')
     setMensaje('')
+    let resultado
     try {
-      const resultado = await paisesApi.sincronizar()
-      setPaises(await paisesApi.listar())
-      setMensaje(`Se sincronizaron ${resultado.sincronizados} países con MockAPI.`)
+      resultado = await paisesApi.sincronizar()
     } catch (errorSincronizacion) {
       setError(errorSincronizacion.message)
     } finally {
       setSincronizando(false)
     }
-  }, [])
+    if (!resultado) return
+
+    setMensaje(`Se sincronizaron ${resultado.sincronizados} países con MockAPI.`)
+    await refrescarListado(
+      'La sincronización terminó, pero no se pudo actualizar el listado.',
+    )
+  }, [refrescarListado])
 
   return (
     <PaisesContext.Provider
@@ -174,17 +175,13 @@ export function PaisesProvider({ children }) {
         guardando,
         sincronizando,
         error,
+        errorCarga,
         mensaje,
-        paisSeleccionado,
-        modoFormulario,
-        formulario,
-        iniciarCreacion,
-        verDetalle,
-        iniciarEdicion,
-        cambiarCampo,
-        cancelarFormulario,
-        cerrarDetalle,
-        guardarPais,
+        reintentarCarga,
+        limpiarNotificaciones,
+        informarCancelacionEliminacion,
+        crearPais,
+        actualizarPais,
         eliminarPais,
         sincronizarPaises,
       }}

@@ -3,6 +3,11 @@ import { normalizarTexto } from '../utils/formato/normalizarTexto.js'
 import paisesARepository from '../repositories/paisesARepository.mjs'
 
 export async function sincronizarPaises() {
+  const baseUrlBanderas = process.env.BASE_URL_FLAGS?.trim()
+  if (!baseUrlBanderas) {
+    throw new Error('Falta configurar BASE_URL_FLAGS en el archivo .env.')
+  }
+
   const { data } = await countriesSourceHttp.get('')
   if (!Array.isArray(data)) {
     throw new Error('La fuente de países devolvió una respuesta inesperada.')
@@ -16,7 +21,9 @@ export async function sincronizarPaises() {
       languages: Object.values(pais.languages || {}).join(', '),
       borders: (pais.borders || []).join(', '),
       area: pais.area || 0,
-      image: pais.cca2 ? `https://flagcdn.com/${pais.cca2.toLowerCase()}.svg` : '',
+      image: pais.cca2
+        ? `${baseUrlBanderas.replace(/\/+$/, '')}/${pais.cca2.toLowerCase()}.svg`
+        : '',
     }
 
     if (paisSanitizado.nombreOficial) {

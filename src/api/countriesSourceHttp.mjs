@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-const baseURL =
-  process.env.VITE_BASE_URL_API ||
-  'https://raw.githubusercontent.com/mledoze/countries/master/countries.json'
+const baseURL = process.env.VITE_BASE_URL_API?.trim()
+
+if (!baseURL) {
+  throw new Error('Falta configurar VITE_BASE_URL_API en el archivo .env.')
+}
 
 export const countriesSourceHttp = axios.create({
   baseURL,
