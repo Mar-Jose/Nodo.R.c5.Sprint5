@@ -1,3 +1,27 @@
+# Qué es y el link al demo 
+Es una api de paises hispanohablantes y sus principales características.
+
+https://sprint-5-react-mockapi-mj.netlify.app
+
+# Qué recurso administra y qué API usás (tu backend o MockAPI, con el link / la doc).
+ `mockapi`:
+https://6ae5087528393034b08e1879.mockapi.io/api/v1/
+`consume esta api`:
+VITE_BASE_URL_API=https://raw.githubusercontent.com/mledoze/countries/master/countries.json
+
+# Cómo correrlo y qué variables de entorno necesita (dejá un .env.example).
+ `hay confianza profe!!!`
+VITE_BASE_URL_API=https://raw.githubusercontent.com/mledoze/countries/master/countries.json
+VITE_MOCKAPI_URL=https://6ae5087528393034b08e1879.mockapi.io/api/v1/paises
+BASE_URL_FLAGS=https://flagcdn.com
+
+# Las decisiones que tomaste: cómo separaste la capa de API, qué pusiste en el contexto y qué no, qué resolviste con IA y qué corregiste a mano.
+
+retome un trabajo del módulo banck end. Reutilice funciones.
+use mockapi, url. netlify.
+ia que use es de copilot free.
+
+
 # CRUD de países con React, Express y MockAPI
 
 ## Desarrollo
