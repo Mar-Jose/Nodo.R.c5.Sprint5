@@ -1,8 +1,9 @@
 # Qué es y el link al demo 
 Es una api de paises hispanohablantes y sus principales características.
-
+`netlify`
 https://sprint-5-react-mockapi-mj.netlify.app
-
+`github`
+https://github.com/Mar-Jose/Nodo.R.c5.Sprint5.git
 # Qué recurso administra y qué API usás (tu backend o MockAPI, con el link / la doc).
  `mockapi`:
 https://6ae5087528393034b08e1879.mockapi.io/api/v1/
